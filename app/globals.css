@@ -1,26 +1,174 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-playfair);
+
+  --color-background: #0F0F0F;
+  --color-foreground: #E8E4DF;
+  --color-accent: #C5FB45;
+  --color-muted: #666666;
+  --color-dark: #1A1A1A;
+  --color-darker: #111111;
+  --color-light: #F5F5F0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+  cursor: none;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0F0F0F;
+  color: #E8E4DF;
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+a, button {
+  cursor: none;
+}
+
+::selection {
+  background: #C5FB45;
+  color: #0F0F0F;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif), serif;
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+
+.line-mask {
+  overflow: hidden;
+  display: block;
+}
+
+.line-mask > * {
+  display: block;
+  transform: translateY(100%);
+}
+
+.word {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.word-inner {
+  display: inline-block;
+  transform: translateY(100%);
+}
+
+.char {
+  display: inline-block;
+  transform: translateY(100%);
+}
+
+/* Parallax Image Container */
+.img-parallax {
+  overflow: hidden;
+  position: relative;
+}
+
+.img-parallax img,
+.img-parallax video {
+  width: 100%;
+  height: 120%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* Magnetic Button */
+.magnetic-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Marquee */
+.marquee-track {
+  display: flex;
+  gap: 2rem;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Grain overlay */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Horizontal Scroll Section */
+.horizontal-scroll-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.horizontal-scroll-track {
+  display: flex;
+  gap: 2vw;
+  width: max-content;
+}
+
+/* Project Card */
+.project-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.project-card .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.project-card:hover .overlay {
+  opacity: 1;
+}
+
+/* Reveal animation base */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.split-line {
+  overflow: hidden;
+}
+
+/* Clip path reveal */
+.clip-reveal {
+  clip-path: inset(100% 0 0 0);
 }
