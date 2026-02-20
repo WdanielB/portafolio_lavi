@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePerformance } from "@/lib/usePerformanceStore";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,127 +18,132 @@ const skills = [
     "MongoDB / PostgreSQL",
 ];
 
+const statsData = [
+    { number: 5, suffix: "+", label: "Years Experience" },
+    { number: 50, suffix: "+", label: "Projects Done" },
+    { number: 10, suffix: "+", label: "Awards" },
+    { number: 100, suffix: "%", label: "Satisfaction" },
+];
+
 export default function About() {
+    const { isLowPerformance } = usePerformance();
     const sectionRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLHeadingElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
     const statsRef = useRef<HTMLDivElement>(null);
     const skillsRef = useRef<HTMLDivElement>(null);
+    // Refs for stat number spans to animate
+    const statValRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Heading
+            const duration = isLowPerformance ? 0.4 : 1;
+            const yOffset = isLowPerformance ? 20 : 60;
+
+            // --- Heading ---
             gsap.fromTo(
                 headingRef.current,
-                { y: 60, opacity: 0 },
+                { y: yOffset, opacity: 0 },
                 {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1,
+                    y: 0, opacity: 1, duration,
                     ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: headingRef.current,
-                        start: "top 85%",
-                    },
+                    scrollTrigger: { trigger: headingRef.current, start: "top 85%" },
                 }
             );
 
-            // Text paragraphs
+            // --- Text paragraphs — stagger batch (more efficient than individual fromTo) ---
             const paragraphs = textRef.current?.querySelectorAll("p");
-            if (paragraphs) {
-                paragraphs.forEach((p, i) => {
-                    gsap.fromTo(
-                        p,
-                        { y: 40, opacity: 0 },
-                        {
-                            y: 0,
-                            opacity: 1,
-                            duration: 0.8,
-                            ease: "power3.out",
-                            scrollTrigger: {
-                                trigger: p,
-                                start: "top 85%",
-                            },
-                            delay: i * 0.1,
-                        }
-                    );
-                });
+            if (paragraphs && paragraphs.length > 0) {
+                gsap.fromTo(
+                    paragraphs,
+                    { y: isLowPerformance ? 10 : 40, opacity: 0 },
+                    {
+                        y: 0, opacity: 1,
+                        duration: isLowPerformance ? 0.3 : 0.8,
+                        ease: "power3.out",
+                        stagger: 0.12, // replaces the forEach + delay pattern
+                        scrollTrigger: { trigger: textRef.current, start: "top 85%" },
+                    }
+                );
             }
 
-            // Stats
+            // --- Stats: animate-in + counter ---
             const statItems = statsRef.current?.querySelectorAll(".stat-item");
-            if (statItems) {
-                statItems.forEach((item, i) => {
-                    gsap.fromTo(
-                        item,
-                        { y: 30, opacity: 0 },
-                        {
-                            y: 0,
-                            opacity: 1,
-                            duration: 0.6,
-                            ease: "power3.out",
-                            scrollTrigger: {
-                                trigger: item,
-                                start: "top 90%",
+            if (statItems && statItems.length > 0) {
+                gsap.fromTo(
+                    statItems,
+                    { y: 30, opacity: 0 },
+                    {
+                        y: 0, opacity: 1,
+                        duration: isLowPerformance ? 0.3 : 0.6,
+                        ease: "power3.out",
+                        stagger: 0.1,
+                        scrollTrigger: {
+                            trigger: statsRef.current,
+                            start: "top 90%",
+                            onEnter: () => {
+                                // Animated counter — clean closure, no type casts
+                                if (isLowPerformance) return;
+                                statsData.forEach((stat, i) => {
+                                    const el = statValRefs.current[i];
+                                    if (!el) return;
+                                    const counter = { val: 0 };
+                                    gsap.to(counter, {
+                                        val: stat.number,
+                                        duration: 1.5,
+                                        ease: "power2.out",
+                                        onUpdate() {
+                                            el.textContent =
+                                                Math.floor(counter.val) + stat.suffix;
+                                        },
+                                    });
+                                });
                             },
-                            delay: i * 0.1,
-                        }
-                    );
-                });
+                        },
+                    }
+                );
             }
 
-            // Skills
+            // --- Skills — stagger batch ---
             const skillItems = skillsRef.current?.querySelectorAll(".skill-tag");
-            if (skillItems) {
-                skillItems.forEach((item, i) => {
-                    gsap.fromTo(
-                        item,
-                        { scale: 0.8, opacity: 0 },
-                        {
-                            scale: 1,
-                            opacity: 1,
-                            duration: 0.5,
-                            ease: "back.out",
-                            scrollTrigger: {
-                                trigger: skillsRef.current,
-                                start: "top 85%",
-                            },
-                            delay: i * 0.05,
-                        }
-                    );
-                });
+            if (skillItems && skillItems.length > 0) {
+                gsap.fromTo(
+                    skillItems,
+                    { scale: isLowPerformance ? 1 : 0.8, opacity: 0 },
+                    {
+                        scale: 1, opacity: 1,
+                        duration: 0.5,
+                        ease: "back.out(1.2)",
+                        stagger: 0.05,
+                        scrollTrigger: { trigger: skillsRef.current, start: "top 85%" },
+                    }
+                );
             }
         }, sectionRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [isLowPerformance]);
 
     return (
-        <section
-            ref={sectionRef}
-            id="about"
-            className="px-8 md:px-16 py-32 relative"
-        >
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
+        <section ref={sectionRef} id="about" className="px-10 md:px-24 py-40 md:py-56 relative">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-20 md:gap-28">
                 {/* Left column */}
                 <div className="md:col-span-5">
                     <h2
                         ref={headingRef}
-                        className="text-5xl md:text-7xl font-serif font-bold mb-8"
+                        className="text-5xl md:text-7xl font-serif font-bold mb-12"
                     >
                         About<span className="text-[#C5FB45]">.</span>
                     </h2>
 
-                    <div ref={statsRef} className="grid grid-cols-2 gap-8 mt-16">
-                        {[
-                            { number: "5+", label: "Years Experience" },
-                            { number: "50+", label: "Projects Done" },
-                            { number: "10+", label: "Awards" },
-                            { number: "100%", label: "Satisfaction" },
-                        ].map((stat, i) => (
+                    <div ref={statsRef} className="grid grid-cols-2 gap-x-10 gap-y-12 mt-20 md:mt-24">
+                        {statsData.map((stat, i) => (
                             <div key={i} className="stat-item">
                                 <div className="text-4xl md:text-5xl font-serif font-bold text-[#C5FB45]">
-                                    {stat.number}
+                                    {/* Ref stored for GSAP counter animation */}
+                                    <span ref={(el) => { statValRefs.current[i] = el; }}>
+                                        {stat.number}{stat.suffix}
+                                    </span>
                                 </div>
                                 <div className="text-xs uppercase tracking-[0.15em] text-[#666] mt-2">
                                     {stat.label}
@@ -172,7 +178,7 @@ export default function About() {
                     </p>
 
                     {/* Skills */}
-                    <div ref={skillsRef} className="flex flex-wrap gap-3 mt-12">
+                    <div ref={skillsRef} className="flex flex-wrap gap-4 mt-16">
                         {skills.map((skill) => (
                             <span
                                 key={skill}

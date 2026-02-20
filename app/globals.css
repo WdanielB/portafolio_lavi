@@ -172,3 +172,44 @@ h1, h2, h3, h4, h5, h6 {
 .clip-reveal {
   clip-path: inset(100% 0 0 0);
 }
+
+/* ===== ACCESSIBILITY & PERFORMANCE ===== */
+
+/**
+ * Users who enable "reduce motion" in their OS get no CSS animations.
+ * GSAP animations are handled separately via isLowPerformance in each component.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/**
+ * .low-power — applied by JS when isLowPerformance is true.
+ * Disables will-change and heavy transitions to reduce compositor layer usage.
+ */
+.low-power * {
+  will-change: auto !important;
+  transition-duration: 0.15s !important;
+}
+
+.low-power .marquee-track {
+  animation-duration: 60s; /* slower marquee */
+}
+
+/* Optimized will-change — only where truly needed */
+.hero-line,
+.project-card,
+.img-parallax img {
+  will-change: transform;
+}

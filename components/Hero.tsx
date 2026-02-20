@@ -3,10 +3,13 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePerformance } from "@/lib/usePerformanceStore";
+import HeroBackground from "@/components/HeroBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
+    const { isLowPerformance } = usePerformance();
     const sectionRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLDivElement>(null);
     const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -16,18 +19,21 @@ export default function Hero() {
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({ delay: 3.2 });
 
-            // Animate each line of the heading
+            // Animate each line — reduced in low-power mode
             const lines = headingRef.current?.querySelectorAll(".hero-line");
             if (lines) {
                 lines.forEach((line, i) => {
                     tl.fromTo(
                         line,
-                        { y: "100%", rotateX: -40 },
+                        isLowPerformance
+                            ? { opacity: 0 }
+                            : { y: "100%", rotateX: -40 },
                         {
-                            y: "0%",
-                            rotateX: 0,
-                            duration: 1.2,
-                            ease: "power4.out",
+                            ...(isLowPerformance
+                                ? { opacity: 1 }
+                                : { y: "0%", rotateX: 0 }),
+                            duration: isLowPerformance ? 0.5 : 1.2,
+                            ease: isLowPerformance ? "power2.out" : "power4.out",
                         },
                         i * 0.15
                     );
@@ -37,8 +43,13 @@ export default function Hero() {
             // Subtitle
             tl.fromTo(
                 subtitleRef.current,
-                { y: 30, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+                { y: isLowPerformance ? 10 : 30, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: isLowPerformance ? 0.4 : 0.8,
+                    ease: "power3.out",
+                },
                 "-=0.5"
             );
 
@@ -50,34 +61,39 @@ export default function Hero() {
                 "-=0.3"
             );
 
-            // Parallax on scroll
-            gsap.to(headingRef.current, {
-                y: -150,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true,
-                },
-            });
+            // Parallax on scroll — skip in low-power (expensive scrub)
+            if (!isLowPerformance) {
+                gsap.to(headingRef.current, {
+                    y: -150,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: true,
+                    },
+                });
+            }
         }, sectionRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [isLowPerformance]);
 
     return (
         <section
             ref={sectionRef}
-            className="relative h-screen flex flex-col justify-end pb-16 px-8 md:px-16 overflow-hidden"
+            className="relative h-screen flex flex-col justify-end pb-28 md:pb-40 px-10 md:px-24 overflow-hidden"
         >
-            {/* Background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0F0F0F] via-[#0F0F0F] to-[#1a1a1a]" />
+            {/* Three.js background — component handles low-power fallback internally */}
+            <HeroBackground />
 
-            {/* Accent circle */}
-            <div className="absolute top-1/4 right-[-10%] w-[600px] h-[600px] rounded-full bg-[#C5FB45]/5 blur-[120px]" />
+            {/* Static gradient overlay on top of the canvas */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0F0F0F]/60 via-transparent to-[#0F0F0F] pointer-events-none z-[1]" />
 
-            <div ref={headingRef} className="relative z-10 mb-8">
+            {/* Accent glow */}
+            <div className="absolute top-1/4 right-[-10%] w-[600px] h-[600px] rounded-full bg-[#C5FB45]/5 blur-[120px] z-[1]" />
+
+            <div ref={headingRef} className="relative z-10 mb-14 md:mb-20">
                 <div className="overflow-hidden" style={{ perspective: "600px" }}>
                     <h1 className="hero-line text-[12vw] md:text-[9vw] font-serif font-bold leading-[0.9] tracking-[-0.03em] text-[#E8E4DF]">
                         Creative
@@ -99,7 +115,7 @@ export default function Hero() {
             <div className="relative z-10 flex items-end justify-between">
                 <p
                     ref={subtitleRef}
-                    className="text-sm md:text-base text-[#666] max-w-md leading-relaxed tracking-wide opacity-0"
+                    className="text-sm md:text-base text-[#666] max-w-sm leading-relaxed tracking-wide opacity-0"
                 >
                     Crafting immersive digital experiences through code, motion, and design.
                     Based in Lima, Perú.
@@ -113,8 +129,10 @@ export default function Hero() {
                         Scroll
                     </span>
                     <div className="w-[1px] h-12 bg-[#333] relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-full bg-[#C5FB45] animate-pulse"
-                            style={{ animation: "scrollLine 2s ease-in-out infinite" }} />
+                        <div
+                            className="absolute top-0 left-0 w-full h-full bg-[#C5FB45]"
+                            style={{ animation: "scrollLine 2s ease-in-out infinite" }}
+                        />
                     </div>
                 </div>
             </div>
