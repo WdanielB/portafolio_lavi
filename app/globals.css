@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
   --font-serif: var(--font-playfair);
 
-  --color-background: #0F0F0F;
-  --color-foreground: #E8E4DF;
-  --color-accent: #C5FB45;
-  --color-muted: #666666;
-  --color-dark: #1A1A1A;
-  --color-darker: #111111;
-  --color-light: #F5F5F0;
+  --color-background: #0D0D12;
+  --color-foreground: #FAF8F5;
+  --color-accent: #C9A84C;
+  --color-muted: #2A2A35;
+  --color-dark: #0A0A0A;
+  --color-darker: #050505;
+  --color-light: #FFFFFF;
 }
 
 * {
@@ -26,27 +26,33 @@ html {
 }
 
 body {
-  background: #0F0F0F;
-  color: #E8E4DF;
+  background: #0D0D12;
+  color: #FAF8F5;
   font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;
   cursor: none;
 }
 
-a, button {
+a,
+button {
   cursor: none;
 }
 
 ::selection {
-  background: #C5FB45;
-  color: #0F0F0F;
+  background: #C9A84C;
+  color: #0D0D12;
 }
 
 ::-webkit-scrollbar {
   width: 0px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-serif), serif;
 }
 
@@ -57,7 +63,7 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
-.line-mask > * {
+.line-mask>* {
   display: block;
   transform: translateY(100%);
 }
@@ -107,8 +113,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* Grain overlay */
@@ -144,7 +155,7 @@ h1, h2, h3, h4, h5, h6 {
 .project-card .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%);
   opacity: 0;
   transition: opacity 0.5s ease;
 }
@@ -180,6 +191,7 @@ h1, h2, h3, h4, h5, h6 {
  * GSAP animations are handled separately via isLowPerformance in each component.
  */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -204,7 +216,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .low-power .marquee-track {
-  animation-duration: 60s; /* slower marquee */
+  animation-duration: 60s;
+  /* slower marquee */
 }
 
 /* Optimized will-change — only where truly needed */

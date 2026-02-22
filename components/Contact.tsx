@@ -74,11 +74,11 @@ export default function Contact() {
         <section
             ref={sectionRef}
             id="contact"
-            className="w-full px-6 md:px-24 py-56 md:py-72 relative text-center overflow-hidden"
+            className="w-full py-56 md:py-72 relative text-center overflow-hidden"
         >
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] rounded-full bg-[#C5FB45]/3 blur-[120px] pointer-events-none" />
 
-            <div className="w-full max-w-7xl mx-auto relative z-10 flex flex-col items-center">
+            <div className="w-[90%] md:w-[85%] lg:w-[80%] max-w-6xl mx-auto relative z-10 flex flex-col items-center">
                 <span className="text-xs md:text-sm uppercase tracking-[0.4em] text-[#666] mb-24 block">
                     Contacto
                 </span>

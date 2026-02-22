@@ -118,8 +118,8 @@ export default function About() {
     }, [isLowPerformance]);
 
     return (
-        <section ref={sectionRef} id="about" className="px-10 md:px-24 py-48 md:py-64 relative">
-            <div className="w-full max-w-7xl mx-auto">
+        <section ref={sectionRef} id="about" className="py-48 md:py-64 relative">
+            <div className="w-[90%] md:w-[85%] lg:w-[80%] max-w-6xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-32">
 
                     {/* Left column */}

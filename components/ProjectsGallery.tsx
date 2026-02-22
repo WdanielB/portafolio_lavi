@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePerformance } from "@/lib/usePerformanceStore";
@@ -20,6 +20,29 @@ export default function ProjectsGallery() {
     const sectionRef = useRef<HTMLElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
     const headingRef = useRef<HTMLHeadingElement>(null);
+    const [paddingLeft, setPaddingLeft] = useState("5vw");
+
+    // Calculate dynamic padding-left to align the horizontal track with the max-w-6xl container
+    useEffect(() => {
+        const updatePadding = () => {
+            let perc = 0.05; // 5% for w-[90%]
+            if (window.innerWidth >= 1024) perc = 0.10; // 10% for lg:w-[80%]
+            else if (window.innerWidth >= 768) perc = 0.075; // 7.5% for md:w-[85%]
+
+            const maxWidth = 1152; // max-w-6xl = 1152px
+            const calculatedWidth = window.innerWidth * (1 - perc * 2);
+
+            if (calculatedWidth > maxWidth) {
+                setPaddingLeft(`${(window.innerWidth - maxWidth) / 2}px`);
+            } else {
+                setPaddingLeft(`${perc * 100}vw`);
+            }
+        };
+
+        updatePadding();
+        window.addEventListener("resize", updatePadding);
+        return () => window.removeEventListener("resize", updatePadding);
+    }, []);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -138,7 +161,7 @@ export default function ProjectsGallery() {
 
     return (
         <section ref={sectionRef} id="work" className="relative bg-[#050505]">
-            <div className="w-full max-w-7xl mx-auto px-10 md:px-24 pt-48 md:pt-64 pb-20">
+            <div className="w-[90%] md:w-[85%] lg:w-[80%] max-w-6xl mx-auto pt-48 md:pt-64 pb-20">
                 <span className="text-xs uppercase tracking-[0.4em] text-[#666] mb-12 block">
                     Casos de Éxito
                 </span>
@@ -154,14 +177,17 @@ export default function ProjectsGallery() {
             </div>
 
             {isLowPerformance ? (
-                <div className="w-full max-w-7xl mx-auto px-10 md:px-24 pb-48 md:pb-64 grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="w-[90%] md:w-[85%] lg:w-[80%] max-w-6xl mx-auto pb-48 md:pb-64 grid grid-cols-1 md:grid-cols-2 gap-12">
                     {cardElements}
                 </div>
             ) : (
                 <div
                     ref={trackRef}
-                    className="flex gap-16 md:gap-[5vw] px-10 md:px-24 pb-64 pt-8"
-                    style={{ width: "max-content" }}
+                    className="flex gap-16 md:gap-[5vw] pb-64 pt-8"
+                    style={{
+                        width: "max-content",
+                        paddingLeft: paddingLeft // Dynamic calculation ensures exact alignment with max-w-6xl main container above
+                    }}
                 >
                     {cardElements}
                 </div>
