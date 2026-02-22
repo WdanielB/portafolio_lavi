@@ -19,7 +19,6 @@ export default function Hero() {
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({ delay: 3.2 });
 
-            // Animate each line — reduced in low-power mode
             const lines = headingRef.current?.querySelectorAll(".hero-line");
             if (lines) {
                 lines.forEach((line, i) => {
@@ -40,7 +39,6 @@ export default function Hero() {
                 });
             }
 
-            // Subtitle
             tl.fromTo(
                 subtitleRef.current,
                 { y: isLowPerformance ? 10 : 30, opacity: 0 },
@@ -53,7 +51,6 @@ export default function Hero() {
                 "-=0.5"
             );
 
-            // Scroll indicator
             tl.fromTo(
                 scrollIndicatorRef.current,
                 { opacity: 0 },
@@ -61,7 +58,6 @@ export default function Hero() {
                 "-=0.3"
             );
 
-            // Parallax on scroll — skip in low-power (expensive scrub)
             if (!isLowPerformance) {
                 gsap.to(headingRef.current, {
                     y: -150,
@@ -82,57 +78,52 @@ export default function Hero() {
     return (
         <section
             ref={sectionRef}
-            className="relative h-screen flex flex-col justify-end pb-28 md:pb-40 px-10 md:px-24 overflow-hidden"
+            className="relative h-screen flex flex-col justify-end pb-32 md:pb-48 px-10 md:px-24 overflow-hidden"
         >
-            {/* Three.js background — component handles low-power fallback internally */}
             <HeroBackground />
-
-            {/* Static gradient overlay on top of the canvas */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#0F0F0F]/60 via-transparent to-[#0F0F0F] pointer-events-none z-[1]" />
-
-            {/* Accent glow */}
             <div className="absolute top-1/4 right-[-10%] w-[600px] h-[600px] rounded-full bg-[#C5FB45]/5 blur-[120px] z-[1]" />
 
-            <div ref={headingRef} className="relative z-10 mb-14 md:mb-20">
-                <div className="overflow-hidden" style={{ perspective: "600px" }}>
-                    <h1 className="hero-line text-[12vw] md:text-[9vw] font-serif font-bold leading-[0.9] tracking-[-0.03em] text-[#E8E4DF]">
-                        Creative
-                    </h1>
+            <div className="w-full max-w-7xl mx-auto flex flex-col justify-end h-full relative z-10">
+                <div ref={headingRef} className="mb-20 md:mb-32">
+                    <div className="overflow-hidden" style={{ perspective: "600px" }}>
+                        <h1 className="hero-line text-[14vw] md:text-[10vw] font-serif font-bold leading-[0.9] tracking-[-0.03em] text-[#E8E4DF]">
+                            We build
+                        </h1>
+                    </div>
+                    <div className="overflow-hidden" style={{ perspective: "600px" }}>
+                        <h1 className="hero-line text-[14vw] md:text-[10vw] font-serif font-bold leading-[0.9] tracking-[-0.03em]">
+                            <span className="text-[#C5FB45]">digital</span>
+                        </h1>
+                    </div>
+                    <div className="overflow-hidden" style={{ perspective: "600px" }}>
+                        <h1 className="hero-line text-[14vw] md:text-[10vw] font-serif italic font-bold leading-[0.9] tracking-[-0.03em] text-[#E8E4DF]">
+                            experiences.
+                        </h1>
+                    </div>
                 </div>
-                <div className="overflow-hidden" style={{ perspective: "600px" }}>
-                    <h1 className="hero-line text-[12vw] md:text-[9vw] font-serif font-bold leading-[0.9] tracking-[-0.03em]">
-                        <span className="text-[#C5FB45]">Developer</span>
-                        <span className="text-[#E8E4DF]"> &</span>
-                    </h1>
-                </div>
-                <div className="overflow-hidden" style={{ perspective: "600px" }}>
-                    <h1 className="hero-line text-[12vw] md:text-[9vw] font-serif italic font-bold leading-[0.9] tracking-[-0.03em] text-[#E8E4DF]">
-                        Designer
-                    </h1>
-                </div>
-            </div>
 
-            <div className="relative z-10 flex items-end justify-between">
-                <p
-                    ref={subtitleRef}
-                    className="text-sm md:text-base text-[#666] max-w-sm leading-relaxed tracking-wide opacity-0"
-                >
-                    Crafting immersive digital experiences through code, motion, and design.
-                    Based in Lima, Perú.
-                </p>
+                <div className="flex items-end justify-between">
+                    <p
+                        ref={subtitleRef}
+                        className="text-sm md:text-lg text-[#888] max-w-lg leading-relaxed tracking-wide opacity-0"
+                    >
+                        Agencia de desarrollo web y diseño digital. Lima, Perú.
+                    </p>
 
-                <div
-                    ref={scrollIndicatorRef}
-                    className="flex flex-col items-center gap-2 opacity-0"
-                >
-                    <span className="text-[10px] uppercase tracking-[0.3em] text-[#666]">
-                        Scroll
-                    </span>
-                    <div className="w-[1px] h-12 bg-[#333] relative overflow-hidden">
-                        <div
-                            className="absolute top-0 left-0 w-full h-full bg-[#C5FB45]"
-                            style={{ animation: "scrollLine 2s ease-in-out infinite" }}
-                        />
+                    <div
+                        ref={scrollIndicatorRef}
+                        className="flex flex-col items-center gap-4 opacity-0"
+                    >
+                        <span className="text-[10px] uppercase tracking-[0.3em] text-[#666]">
+                            Scroll
+                        </span>
+                        <div className="w-[1px] h-16 bg-[#333] relative overflow-hidden">
+                            <div
+                                className="absolute top-0 left-0 w-full h-full bg-[#C5FB45]"
+                                style={{ animation: "scrollLine 2s ease-in-out infinite" }}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

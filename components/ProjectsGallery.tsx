@@ -8,11 +8,11 @@ import { usePerformance } from "@/lib/usePerformanceStore";
 gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
-    { id: 1, title: "Lumina", subtitle: "Brand & Web Design", year: "2024", color: "#1a3a2a" },
-    { id: 2, title: "Orbital", subtitle: "Creative Direction", year: "2024", color: "#2a1a3a" },
-    { id: 3, title: "Nexus", subtitle: "UI/UX & Development", year: "2023", color: "#3a2a1a" },
-    { id: 4, title: "Canvas", subtitle: "Motion Design", year: "2023", color: "#1a2a3a" },
-    { id: 5, title: "Aether", subtitle: "Full Stack App", year: "2023", color: "#2a3a1a" },
+    { id: 1, title: "Lumina", client: "Nura Health", subtitle: "Web App", year: "2024", color: "#1a3a2a" },
+    { id: 2, title: "Orbital", client: "Fintech Corp", subtitle: "Landing Page", year: "2024", color: "#2a1a3a" },
+    { id: 3, title: "Nexus", client: "RetailCo", subtitle: "E-Commerce", year: "2023", color: "#3a2a1a" },
+    { id: 4, title: "Canvas", client: "Studio MX", subtitle: "Branding", year: "2023", color: "#1a2a3a" },
+    { id: 5, title: "Aether", client: "TechStart", subtitle: "SaaS Platform", year: "2023", color: "#2a3a1a" },
 ];
 
 export default function ProjectsGallery() {
@@ -23,31 +23,28 @@ export default function ProjectsGallery() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Heading reveal
             gsap.fromTo(
                 headingRef.current,
                 { y: isLowPerformance ? 20 : 60, opacity: 0 },
                 {
                     y: 0, opacity: 1,
-                    duration: isLowPerformance ? 0.4 : 1,
+                    duration: isLowPerformance ? 0.4 : 1.2,
                     ease: "power3.out",
-                    scrollTrigger: { trigger: headingRef.current, start: "top 85%" },
+                    scrollTrigger: { trigger: headingRef.current, start: "top 80%" },
                 }
             );
 
-            // Low-power: skip the expensive pinned horizontal scroll
             if (isLowPerformance) {
                 const cards = sectionRef.current?.querySelectorAll(".project-card");
                 if (cards && cards.length > 0) {
                     gsap.fromTo(cards, { opacity: 0, y: 30 }, {
-                        opacity: 1, y: 0, duration: 0.4, stagger: 0.08,
+                        opacity: 1, y: 0, duration: 0.4, stagger: 0.1,
                         scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
                     });
                 }
                 return;
             }
 
-            // Performance mode: horizontal scroll with GSAP pin
             const track = trackRef.current;
             if (!track) return;
             const totalScroll = track.scrollWidth - window.innerWidth;
@@ -66,12 +63,11 @@ export default function ProjectsGallery() {
                 },
             });
 
-            // Animate each card with the containerAnimation correctly linked
             const cards = track.querySelectorAll(".project-card");
             cards.forEach((card) => {
                 gsap.fromTo(
                     card,
-                    { opacity: 0, scale: 0.85 },
+                    { opacity: 0, scale: 0.9 },
                     {
                         opacity: 1,
                         scale: 1,
@@ -79,8 +75,8 @@ export default function ProjectsGallery() {
                         ease: "power3.out",
                         scrollTrigger: {
                             trigger: card,
-                            containerAnimation: horizontalAnim, // ✅ properly linked
-                            start: "left 90%",
+                            containerAnimation: horizontalAnim,
+                            start: "left 85%",
                             toggleActions: "play none none reverse",
                         },
                     }
@@ -95,45 +91,45 @@ export default function ProjectsGallery() {
         <div
             key={project.id}
             className={`project-card group ${isLowPerformance
-                ? "w-full h-[280px]"
-                : "w-[75vw] md:w-[40vw] h-[55vh] md:h-[65vh] flex-shrink-0"
-                } rounded-xl overflow-hidden relative`}
+                ? "w-full h-[320px]"
+                : "w-[75vw] md:w-[45vw] h-[65vh] flex-shrink-0"
+                } rounded-2xl overflow-hidden relative shadow-2xl`}
             style={{ backgroundColor: project.color }}
         >
             {/* Number */}
-            <div className="absolute top-6 left-6 z-10">
-                <span className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+            <div className="absolute top-8 left-8 z-10">
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">
                     {String(index + 1).padStart(2, "0")}
                 </span>
             </div>
 
-            {/* Year badge */}
-            <div className="absolute top-6 right-6 z-10">
-                <span className="text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border border-white/20 text-white/60">
+            {/* Year + Client badge */}
+            <div className="absolute top-8 right-8 z-10 flex items-center gap-3">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+                    {project.client}
+                </span>
+                <span className="text-[10px] uppercase tracking-[0.3em] bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
                     {project.year}
                 </span>
             </div>
 
             {/* Content at bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
-                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-4xl md:text-5xl font-serif font-bold mb-2 text-white">
-                        {project.title}
-                    </h3>
-                    <p className="text-sm text-white/50 tracking-wide uppercase">
+            <div className="absolute bottom-0 left-0 right-0 p-10 z-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+                <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <p className="text-[10px] text-[#C5FB45] tracking-[0.3em] uppercase mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         {project.subtitle}
                     </p>
+                    <h3 className="text-4xl md:text-6xl font-serif font-bold text-white">
+                        {project.title}
+                    </h3>
                 </div>
             </div>
 
-            {/* Hover overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-
             {/* View indicator */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-all duration-500 scale-75 group-hover:scale-100">
-                <div className="w-24 h-24 rounded-full border border-[#C5FB45] flex items-center justify-center">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#C5FB45]">
-                        View
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-all duration-500 scale-75 group-hover:scale-100">
+                <div className="w-28 h-28 bg-[#C5FB45] rounded-full flex items-center justify-center text-[#0F0F0F] transform -rotate-12 group-hover:rotate-0 transition-transform duration-700">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.2em] pb-0.5">
+                        Ver
                     </span>
                 </div>
             </div>
@@ -141,29 +137,30 @@ export default function ProjectsGallery() {
     ));
 
     return (
-        <section ref={sectionRef} id="work" className="relative">
-            <div className="px-10 md:px-24 pt-40 md:pt-56 pb-16">
-                <div className="flex items-end justify-between mb-6">
-                    <h2 ref={headingRef} className="text-5xl md:text-7xl font-serif font-bold">
-                        Selected <span className="italic text-[#C5FB45]">Works</span>
+        <section ref={sectionRef} id="work" className="relative bg-[#050505]">
+            <div className="w-full max-w-7xl mx-auto px-10 md:px-24 pt-48 md:pt-64 pb-20">
+                <span className="text-xs uppercase tracking-[0.4em] text-[#666] mb-12 block">
+                    Casos de Éxito
+                </span>
+                <div className="flex items-end justify-between mb-10">
+                    <h2 ref={headingRef} className="text-6xl md:text-[6vw] font-serif font-bold text-[#E8E4DF] leading-none">
+                        Nuestro<br className="md:hidden" /> Trabajo<span className="text-[#C5FB45]">.</span>
                     </h2>
-                    <span className="text-sm text-[#666] tracking-[0.15em] uppercase hidden md:block">
-                        ({projects.length} Projects)
+                    <span className="text-xs text-[#666] tracking-[0.2em] uppercase hidden md:block">
+                        {projects.length} Proyectos
                     </span>
                 </div>
-                <div className="h-[1px] bg-[#333]" />
+                <div className="h-[1px] bg-[#222]" />
             </div>
 
-            {/* Low-power: simple responsive grid */}
             {isLowPerformance ? (
-                <div className="px-10 md:px-24 pb-40 md:pb-56 pt-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                <div className="w-full max-w-7xl mx-auto px-10 md:px-24 pb-48 md:pb-64 grid grid-cols-1 md:grid-cols-2 gap-12">
                     {cardElements}
                 </div>
             ) : (
-                /* Performance: horizontal scroll track */
                 <div
                     ref={trackRef}
-                    className="flex gap-[3vw] px-10 md:px-24 pb-48 pt-12"
+                    className="flex gap-16 md:gap-[5vw] px-10 md:px-24 pb-64 pt-8"
                     style={{ width: "max-content" }}
                 >
                     {cardElements}

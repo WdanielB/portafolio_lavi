@@ -6,8 +6,9 @@ import CustomCursor from "@/components/CustomCursor";
 import Preloader from "@/components/Preloader";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import ProjectsGallery from "@/components/ProjectsGallery";
 import Marquee from "@/components/Marquee";
+import Services from "@/components/Services";
+import ProjectsGallery from "@/components/ProjectsGallery";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -24,6 +25,7 @@ export default function Home() {
         <main>
           <Hero />
           <Marquee />
+          <Services />
           <ProjectsGallery />
           <About />
           <Contact />

@@ -14,13 +14,20 @@ export default function Navbar() {
         );
     }, []);
 
+    const links = [
+        { label: "Servicios", href: "#services" },
+        { label: "Proyectos", href: "#work" },
+        { label: "Nosotros", href: "#about" },
+        { label: "Contacto", href: "#contact" },
+    ];
+
     return (
         <nav
             ref={navRef}
             className="fixed top-6 md:top-8 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-5xl opacity-0"
         >
             <div className="flex items-center justify-between bg-[#0a0a0a] border border-[#222] rounded-full px-8 py-4 md:px-10 md:py-5 shadow-[0_20px_40px_rgba(0,0,0,0.6)]">
-                {/* Logo - Larger */}
+                {/* Logo */}
                 <a
                     href="/"
                     className="text-xl md:text-2xl font-bold tracking-[0.2em] uppercase text-white hover:text-[#C5FB45] transition-colors duration-300"
@@ -28,23 +35,20 @@ export default function Navbar() {
                     LAVI
                 </a>
 
-                {/* Center Links - Slightly larger font */}
+                {/* Center Links */}
                 <div className="hidden md:flex items-center gap-10">
-                    <a
-                        href="#work"
-                        className="text-xs uppercase tracking-[0.2em] text-[#999] hover:text-white transition-colors duration-300"
-                    >
-                        Proyectos
-                    </a>
-                    <a
-                        href="#contact"
-                        className="text-xs uppercase tracking-[0.2em] text-[#999] hover:text-white transition-colors duration-300"
-                    >
-                        Contacto
-                    </a>
+                    {links.map((link) => (
+                        <a
+                            key={link.label}
+                            href={link.href}
+                            className="text-xs uppercase tracking-[0.2em] text-[#999] hover:text-white transition-colors duration-300"
+                        >
+                            {link.label}
+                        </a>
+                    ))}
                 </div>
 
-                {/* CTA Button — 'Cotizar' */}
+                {/* CTA */}
                 <a
                     href="#contact"
                     className="bg-white hover:bg-[#e0e0e0] text-black text-xs font-bold uppercase tracking-[0.2em] px-6 py-3 md:px-8 md:py-3.5 rounded-full transition-transform duration-300 hover:scale-105"

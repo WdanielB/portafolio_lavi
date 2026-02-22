@@ -15,7 +15,6 @@ export default function Contact() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Heading lines reveal
             const lines = headingRef.current?.querySelectorAll(".contact-line");
             if (lines && lines.length > 0) {
                 gsap.fromTo(
@@ -32,7 +31,6 @@ export default function Contact() {
                 );
             }
 
-            // Button reveal
             gsap.fromTo(
                 btnRef.current,
                 { scale: isLowPerformance ? 0.9 : 0, opacity: 0 },
@@ -45,7 +43,6 @@ export default function Contact() {
                 }
             );
 
-            // Magnetic button effect — skip in low-power
             if (isLowPerformance) return;
 
             const btn = btnRef.current;
@@ -77,48 +74,42 @@ export default function Contact() {
         <section
             ref={sectionRef}
             id="contact"
-            className="w-full px-6 md:px-24 py-48 md:py-64 relative text-center overflow-hidden"
+            className="w-full px-6 md:px-24 py-56 md:py-72 relative text-center overflow-hidden"
         >
-            {/* Background accent */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] rounded-full bg-[#C5FB45]/3 blur-[120px] pointer-events-none" />
 
-            <div className="relative z-10 flex flex-col items-center">
-                {/* Visual Label */}
-                <span className="text-xs md:text-sm uppercase tracking-[0.4em] text-[#666] mb-20 md:mb-24 block">
-                    Get in Touch
+            <div className="w-full max-w-7xl mx-auto relative z-10 flex flex-col items-center">
+                <span className="text-xs md:text-sm uppercase tracking-[0.4em] text-[#666] mb-24 block">
+                    Contacto
                 </span>
 
-                {/* Main Heading */}
-                <div ref={headingRef} className="mb-24 md:mb-32">
+                <div ref={headingRef} className="mb-32 md:mb-40">
                     <div className="overflow-hidden">
-                        <h2 className="contact-line text-5xl md:text-7xl lg:text-[7vw] font-serif font-bold leading-[1.1] text-[#E8E4DF]">
-                            Let&apos;s create
+                        <h2 className="contact-line text-6xl md:text-8xl lg:text-[9vw] font-serif font-bold leading-[1.0] text-[#E8E4DF]">
+                            Hablemos de tu
                         </h2>
                     </div>
                     <div className="overflow-hidden">
-                        <h2 className="contact-line text-5xl md:text-7xl lg:text-[7vw] font-serif font-bold leading-[1.1] text-[#E8E4DF]">
-                            something{" "}
-                            <span className="italic text-[#C5FB45]">extraordinary</span>
+                        <h2 className="contact-line text-6xl md:text-8xl lg:text-[9vw] font-serif font-bold leading-[1.0] text-[#E8E4DF]">
+                            <span className="italic text-[#C5FB45]">próximo proyecto.</span>
                         </h2>
                     </div>
                 </div>
 
-                {/* Big Magnetic Button */}
                 <a
                     ref={btnRef}
-                    href="mailto:hello@example.com"
-                    className="flex items-center justify-center w-48 h-48 md:w-64 md:h-64 rounded-full bg-[#C5FB45] text-[#0F0F0F] font-bold text-sm md:text-lg uppercase tracking-[0.2em] hover:scale-110 transition-transform duration-300 opacity-0 mb-20"
+                    href="mailto:hello@laviagency.com"
+                    className="flex items-center justify-center w-56 h-56 md:w-72 md:h-72 rounded-full bg-[#C5FB45] text-[#0F0F0F] font-bold text-sm md:text-xl uppercase tracking-[0.2em] hover:scale-110 transition-transform duration-300 opacity-0 mb-24"
                     data-cursor-hover
                 >
-                    Say Hello
+                    Escríbenos
                 </a>
 
-                {/* Email visual display */}
                 <a
-                    href="mailto:hello@example.com"
-                    className="text-[#666] hover:text-white transition-colors duration-300 text-sm md:text-base tracking-[0.1em] mt-12 md:mt-16 border-b border-transparent hover:border-[#C5FB45]"
+                    href="mailto:hello@laviagency.com"
+                    className="text-[#555] hover:text-[#C5FB45] transition-colors duration-300 text-sm md:text-lg tracking-[0.15em] border-b border-transparent hover:border-[#C5FB45] pb-1"
                 >
-                    hello@example.com
+                    hello@laviagency.com
                 </a>
             </div>
         </section>
